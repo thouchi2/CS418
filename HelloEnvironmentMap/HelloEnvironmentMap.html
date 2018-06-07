@@ -1,0 +1,62 @@
+<!DOCTYPE HTML> 
+<html lang="en"> 
+<head>
+<title>Hello Map</title>
+<meta charset="utf-8"> 
+</head>
+
+    
+<script id="shader-vs" type="x-shader/x-vertex">
+   attribute vec3 aVertexNormal;
+   attribute vec3 aVertexPosition;
+   
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+    uniform mat3 uNMatrix;
+    
+    varying vec3 vVertexNormal;
+    varying vec4 vVertexPosition;
+    varying vec3 vReflection;
+
+    void main(void) {
+
+      // CODE GOES HERE
+      vVertexPosition = vec4(aVertexPosition, 1.0);
+      vVertexNormal = aVertexNormal;
+      
+      gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        
+    }   
+</script>
+    
+<script id="shader-fs" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec3 vVertexNormal;
+    varying vec4 vVertexPosition;
+
+    uniform samplerCube uCubeSampler;
+
+    void main(void) {
+
+      // CODE GOES HERE
+      vec4 color = textureCube(uCubeSampler, normalize(vVertexPosition).xyz);
+      gl_FragColor = vec4(color.xyz, 1.0);
+
+     }
+</script>
+    
+    
+<script src="gl-matrix-min.js"></script> 
+<script src="webgl-utils.js"></script>
+<script src="simpleModeling.js"></script>  
+<script src="HelloEnvironmentMap.js"></script>   
+<body onload="startup();">
+ <canvas id="myGLCanvas" width="800" height="800"></canvas>
+  <div id="controls" style="display:inline-block;padding:50px;vertical-align:top">
+    <p>Rotate Counter-Clockwise: press the Left Arrow key.</p>
+    <p>Rotate Clockwise: press the Right Arrow key.</p>
+ </div>
+</body>
+
+</html>
